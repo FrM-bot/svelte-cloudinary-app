@@ -15,13 +15,13 @@ export async function POST(event: RequestEvent) {
 
 		const dataView = new DataView(data)
 
-		const { pathname } = new URL('../', import.meta.url)
+		const { pathname } = new URL('./', import.meta.url)
 
-		const pathnameDest = path.join(pathname.slice(1), 'images')
+		const pathnameDest = path.join(pathname.slice(1))
 
-		if (!fs.existsSync(pathnameDest)) {
-			fs.mkdirSync(pathnameDest)
-		}
+		// if (!fs.existsSync(pathnameDest)) {
+		// 	fs.mkdirSync(pathnameDest)
+		// }
 
 		const pathFile = path.join(pathnameDest, file.name)
 
