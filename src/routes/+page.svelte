@@ -36,9 +36,11 @@
 	) => {
 		if (File) {
 			const response = await UploadCloudinary(File)
-			const { public_id: publicId, url } = response
-			imageEdited.url = url
-			imageEdited.alt = publicId
+			if (response) {
+				const { public_id: publicId, url } = response
+				imageEdited.url = url
+				imageEdited.alt = publicId
+			}
 		}
 	}
 
