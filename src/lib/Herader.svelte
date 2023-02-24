@@ -3,7 +3,7 @@
 	import Cloudinary from './icons/Cloudinary.svelte'
 </script>
 
-<header class="dark:bg-custom-dark/70 py-4 px-6 border-b sticky top-0 bg-white/50 backdrop-blur-sm dark:border-zinc-700 z-10">
+<header class="dark:bg-custom-dark/70 py-4 px-6 border-b sticky top-0 bg-white/50 backdrop-blur-sm dark:border-primary z-10">
 	<div class="flex justify-between items-center">
 		<h1>
 			<Cloudinary />

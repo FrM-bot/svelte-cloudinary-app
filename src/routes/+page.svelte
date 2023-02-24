@@ -3,13 +3,16 @@
 	import Dragzone from '$lib/Dragzone.svelte'
 	import { UploadCloudinary } from '../services/upload'
 	import ImagePreview from '$lib/ImagePreview.svelte'
+	import { getLocalStorageValue, setLocalStorageValue } from '../utils/localStorage'
+	import { LOCAL_STORAGE_KEYS } from '../types/LocalStorage'
+	import { onMount } from 'svelte'
 
 	let File: File | null
 	$: imagePreview = {
 		src: File && URL?.createObjectURL(File),
 		name: File && File?.name?.split('.')[0]
 	}
-	let imageEdited = {
+	let imageToEdite = {
 		url: '',
 		alt: ''
 	}
@@ -38,8 +41,10 @@
 			const response = await UploadCloudinary(File)
 			if (response) {
 				const { public_id: publicId, url } = response
-				imageEdited.url = url
-				imageEdited.alt = publicId
+				imageToEdite.url = url
+				const [_folder, name] = publicId.split('/')
+				imageToEdite.alt = name
+				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, imageToEdite)
 			}
 		}
 	}
@@ -51,10 +56,16 @@
 	function onRemoveFileInput() {
 		File = null
 	}
+	onMount(() => {
+		const localImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE) as { url: string, alt: string }
+		if (localImage) {
+			imageToEdite = localImage
+		}
+	})
 </script>
 
 <Dragzone on:drop={inputFile} />
-	
+
 <div class="h-full">
 	<form class="flex flex-col items-center gap-4 w-full" on:submit={(e) => onSubmit(e)}>
 		<label
@@ -75,10 +86,9 @@
 	</form>
 </div>
 
-
 <div class="flex flex-col items-center gap-4 mt-4">
-	{#if imageEdited?.url && imageEdited.alt}
-		<ImagePreview alt={imageEdited.alt} src={imageEdited.url} />
+	{#if imageToEdite?.url && imageToEdite?.alt}
+		<ImagePreview alt={imageToEdite.alt} src={imageToEdite.url} />
 		<div>
 			<Button on:click={onRemoveFileInput}>Remove</Button>
 		</div>
