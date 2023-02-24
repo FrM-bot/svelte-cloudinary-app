@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit'
+import { json, error as Error } from '@sveltejs/kit'
 import type { RequestEvent } from './$types'
 import fs from 'node:fs'
 import { UploadImage } from '../../../config/cloudinary'
@@ -6,30 +6,34 @@ import { UploadImage } from '../../../config/cloudinary'
 import path from 'node:path'
 
 export async function POST(event: RequestEvent) {
-	const body = await event.request.formData()
+	try {
+		const body = await event.request.formData()
 
-	const file = body.get('file') as File
+		const file = body.get('file') as File
 
-	const data = await file.arrayBuffer()
+		const data = await file.arrayBuffer()
 
-	const dataView = new DataView(data)
-	
-    const { pathname } = new URL(import.meta.url)
-	
-    const pathnameDest = path.join(path.parse(pathname).root, 'images')
+		const dataView = new DataView(data)
 
-    if (!fs.existsSync(pathnameDest)) {
-        fs.mkdirSync(pathnameDest)
-    }
+		const { pathname } = new URL('../', import.meta.url)
 
-    const pathFile = path.join(pathnameDest, file.name)
-	
-    fs.writeFileSync(pathFile, dataView, { encoding: 'binary' })
+		const pathnameDest = path.join(pathname.slice(1), 'images')
 
-	const result = await UploadImage(pathFile)
+		if (!fs.existsSync(pathnameDest)) {
+			fs.mkdirSync(pathnameDest)
+		}
 
-    fs.unlinkSync(pathFile)
+		const pathFile = path.join(pathnameDest, file.name)
 
-    return json(result)
+		fs.writeFileSync(pathFile, dataView, { encoding: 'binary' })
 
+		const result = await UploadImage(pathFile)
+
+		fs.unlinkSync(pathFile)
+
+		return json(result)
+	} catch (error: Error | any) {
+		console.error(error)
+		return Error(500, error)
+	}
 }

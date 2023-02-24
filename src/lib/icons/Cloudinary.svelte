@@ -3,7 +3,7 @@
 	viewBox="0 0 500 96.77"
 	class='w-32 text-[#3448c5]'
 	fill='currentColor'
-	><title>Cloudinary Logo</title>
+	><title>Cloudinary</title>
 	><g id="Layer_2" data-name="Layer 2"
 		><g id="Layer_1-2" data-name="Layer 1"
 			><path
