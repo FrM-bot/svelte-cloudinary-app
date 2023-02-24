@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--custom-cyan: 21 232 207;
+	--custom-dark: 20 20 20;
+	--custom-dark-2: 35 35 35;
+	--custom-white: 255 255 255;
+	--custom-pink: 255 0 128;
+	--primary: 52 72 197;
+	--secondary: 30 41 59;
+}
+
+::-webkit-scrollbar {
+	width: 0.5rem;
+	/* background-color: rgb(var(--custom-dark)); */
+	border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: rgb(var(--primary));
+	border-radius: 10px 0 0 10px;
+}
