@@ -39,13 +39,14 @@
 	) => {
 		if (File) {
 			const response = await UploadCloudinary(File)
-			if (response) {
+			if (response?.public_id && response?.url) {
 				const { public_id: publicId, url } = response
 				imageToEdite.url = url
-				const [_folder, name] = publicId.split('/')
+				const [_folder, name] = publicId?.split('/')
 				imageToEdite.alt = name
 				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, imageToEdite)
 			}
+			console.log({response})
 		}
 	}
 
@@ -57,7 +58,10 @@
 		File = null
 	}
 	onMount(() => {
-		const localImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE) as { url: string, alt: string }
+		const localImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE) as {
+			url: string
+			alt: string
+		}
 		if (localImage) {
 			imageToEdite = localImage
 		}
@@ -86,16 +90,22 @@
 	</form>
 </div>
 
-<div class="flex flex-col items-center gap-4 mt-4">
+<div class="flex flex-col items-center gap-4 my-4">
 	{#if imageToEdite?.url && imageToEdite?.alt}
-		<ImagePreview alt={imageToEdite.alt} src={imageToEdite.url} />
 		<div>
 			<Button on:click={onRemoveFileInput}>Remove</Button>
 		</div>
+		<ImagePreview alt={imageToEdite.alt} src={imageToEdite.url} />
+		<div class="border-[3px] w-full rounded-md p-3 my-4 border-primary shadow-lg shadow-black/20">
+			config
+		</div>
 	{:else if imagePreview?.name && imagePreview?.src}
-		<ImagePreview alt={imagePreview.name} src={imagePreview.src} />
 		<div>
 			<Button on:click={onRemoveFileInput}>Remove</Button>
+		</div>
+		<ImagePreview alt={imagePreview.name} src={imagePreview.src} />
+		<div class="border-[3px] w-full rounded-md p-3 my-4 border-primary shadow-lg shadow-black/20">
+			config
 		</div>
 	{/if}
 </div>
