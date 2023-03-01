@@ -20,4 +20,5 @@ export interface ReponseCoudinary {
 	version: number
 	version_id: string
 	width: number
+	delete_token: string
 }

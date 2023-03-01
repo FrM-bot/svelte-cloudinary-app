@@ -1,16 +1,12 @@
 import type { ReponseCoudinary } from "../types/response"
-
-const URL = {
-    upload: '/api/image'
-    // upload: 'https://api.cloudinary.com/v1_1/dxkry5nri/image/upload'
-}
+import { URL } from "./URL"
 
 export const UploadCloudinary = async (File: File): Promise<ReponseCoudinary> => {
     try {
         const body = new FormData()
-        // body.append('upload_preset', 'ml_default')
-        // body.append('api_key', '897387432799254')
-        // body.append('timestamp', String((Date.now() / 1000)))
+        body.append('upload_preset', 'ml_default')
+        body.append('api_key', '897387432799254')
+        body.append('timestamp', String(Date.now()))
         body.append('file', File)
 
         const responsae = await fetch(URL.upload, {

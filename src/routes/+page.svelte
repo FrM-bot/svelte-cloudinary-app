@@ -7,15 +7,38 @@
 	import { LOCAL_STORAGE_KEYS } from '../types/LocalStorage'
 	import { onMount } from 'svelte'
 
+	import { goto } from '$app/navigation'
+	import { imageToEdit } from '../store/image'
+
+	// Cloudinary Optios
+	// import { Transformation } from '@cloudinary/url-gen'
+
+	// Import required actions.
+	// import { byRadius } from '@cloudinary/url-gen/actions/roundCorners'
+	// import { sepia } from '@cloudinary/url-gen/actions/effect'
+	// import { source } from '@cloudinary/url-gen/actions/overlay'
+	// import { opacity, brightness } from '@cloudinary/url-gen/actions/adjust'
+	// import { byAngle } from '@cloudinary/url-gen/actions/rotate'
+
+	// Import required qualifiers.
+	// import { image } from '@cloudinary/url-gen/qualifiers/source'
+	// import { Position } from '@cloudinary/url-gen/qualifiers/position'
+	// import { compass } from '@cloudinary/url-gen/qualifiers/gravity'
+	// import { focusOn } from '@cloudinary/url-gen/qualifiers/gravity'
+	// import { FocusOn } from '@cloudinary/url-gen/qualifiers/focusOn'
+	import Card from '$lib/Card.svelte'
+	import type { Image } from '../store/image'
+	import { DestroyCloudinary } from '../services/delete'
+	import Link from '$lib/Link.svelte'
 	let File: File | null
 	$: imagePreview = {
-		src: File && URL?.createObjectURL(File),
-		name: File && File?.name?.split('.')[0]
-	}
-	let imageToEdite = {
-		url: '',
-		alt: ''
-	}
+		alt: File && File.name,
+		url: File && URL.createObjectURL(File),
+		publicId: ''
+	} as Image
+
+	let recientImage: Image
+
 	const onInput = (
 		event: Event & {
 			currentTarget: EventTarget & HTMLInputElement
@@ -39,14 +62,27 @@
 	) => {
 		if (File) {
 			const response = await UploadCloudinary(File)
-			if (response?.public_id && response?.url) {
-				const { public_id: publicId, url } = response
-				imageToEdite.url = url
-				const [_folder, name] = publicId?.split('/')
-				imageToEdite.alt = name
-				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, imageToEdite)
+			if (response?.public_id) {
+				const {
+					public_id: publicId,
+					original_filename: alt,
+					url,
+					version_id,
+					asset_id,
+				} = response
+
+				const imageCloudinary = {
+					publicId,
+					alt,
+					url,
+					assetId: asset_id,
+					versionId: version_id,
+				}
+
+				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, imageCloudinary)
+				imageToEdit.set(imageCloudinary)
+				goto(`/${publicId}`)
 			}
-			console.log({response})
 		}
 	}
 
@@ -54,24 +90,34 @@
 		const fileInput = event.detail.file
 		File = fileInput
 	}
-	function onRemoveFileInput() {
-		File = null
-	}
 	onMount(() => {
-		const localImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE) as {
-			url: string
-			alt: string
-		}
-		if (localImage) {
-			imageToEdite = localImage
+		recientImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE)
+		if (recientImage) {
+			imagePreview = recientImage
 		}
 	})
+	async function onRemoveFileInput() {
+		File = null
+		if (recientImage.publicId) {
+			const response = await DestroyCloudinary({ publicId: $imageToEdit.publicId })
+			if (response.result) {
+				imageToEdit.set({
+					alt: '',
+					assetId: '',
+					publicId: '',
+					url: '',
+					versionId: ''
+				})
+				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
+			}
+		}
+	}
 </script>
 
 <Dragzone on:drop={inputFile} />
 
 <div class="h-full">
-	<form class="flex flex-col items-center gap-4 w-full" on:submit={(e) => onSubmit(e)}>
+	<form class="flex justify-center items-center gap-4 w-full" on:submit={(e) => onSubmit(e)}>
 		<label
 			class="bg-gradient-to-r to-primary from-secondary p-[3px] w-fit h-fit rounded-lg grid place-content-center border-[2px] dark:border-custom-dark-2 shadow-lg shadow-black/20 hover:shadow-primary/10 duration-300"
 			for="file_input"
@@ -82,30 +128,25 @@
 				UPLOAD FILE
 			</span>
 		</label>
-		<input id="file_input" type="file" on:input={onInput} accept="image/*" class="hidden" />
+		<input id="file_input" type="file" on:change={onInput} accept="image/*" class="hidden" />
 
-		<div>
-			<Button>Save</Button>
-		</div>
+		<Button>Save</Button>
 	</form>
 </div>
 
 <div class="flex flex-col items-center gap-4 my-4">
-	{#if imageToEdite?.url && imageToEdite?.alt}
-		<div>
+	{#if imagePreview?.url && imagePreview?.alt}
+		<div class="flex gap-4 items-center">
+			<Card>
+				<h2>
+					{imagePreview.alt}
+				</h2>
+			</Card>
 			<Button on:click={onRemoveFileInput}>Remove</Button>
 		</div>
-		<ImagePreview alt={imageToEdite.alt} src={imageToEdite.url} />
-		<div class="border-[3px] w-full rounded-md p-3 my-4 border-primary shadow-lg shadow-black/20">
-			config
-		</div>
-	{:else if imagePreview?.name && imagePreview?.src}
-		<div>
-			<Button on:click={onRemoveFileInput}>Remove</Button>
-		</div>
-		<ImagePreview alt={imagePreview.name} src={imagePreview.src} />
-		<div class="border-[3px] w-full rounded-md p-3 my-4 border-primary shadow-lg shadow-black/20">
-			config
-		</div>
+		<ImagePreview alt={imagePreview.alt} src={imagePreview.url} />
+		{#if recientImage?.publicId}
+			<Link href={recientImage.publicId}>Resume</Link>
+		{/if}
 	{/if}
 </div>
