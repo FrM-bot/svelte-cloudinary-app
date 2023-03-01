@@ -1,0 +1,22 @@
+export type EffectTypes =
+| 'pixelate'
+| 'grayscale'
+| 'oilPaint'
+| 'blur'
+| 'blackwhite'
+| 'negate'
+| 'sepia'
+| 'vignette'
+| 'simulateColorBlind'
+| 'redEye'
+| 'colorize'
+| 'backgroundRemoval'
+
+export type ConditionTypes =
+| 'deuteranopia'
+| 'protanopia'
+| 'tritanopia'
+| 'tritanomaly'
+| 'deuteranomaly'
+| 'cone_monochromacy'
+| 'rod_monochromacy'

@@ -13,7 +13,7 @@
 }
 
 ::-webkit-scrollbar {
-	width: 0.5rem;
+	width: 5px;
 	/* background-color: rgb(var(--custom-dark)); */
 	border-radius: 10px;
 }
@@ -21,3 +21,15 @@
 	background-color: rgb(var(--primary));
 	border-radius: 10px 0 0 10px;
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+input[type=checkbox]{
+	appearance: none;
+  }
