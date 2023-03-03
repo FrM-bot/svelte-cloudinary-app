@@ -13,11 +13,9 @@ export interface Image {
 const initialState: Image = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE) ?? {
     url: '',
     alt: '',
-    publicId: ''
+    publicId: '',
+    assetId: '',
+    versionId: ''
 }
 
 export const imageToEdit = writable(initialState)
-
-imageToEdit.subscribe(value => {
-    console.log(value)
-})

@@ -10,30 +10,26 @@
 	import { transformationsStore } from '../../../store/transformations'
 	import Transformations from '$lib/Transformations.svelte'
 	import Card from '$lib/Card.svelte'
-	import { Cloudinary } from '@cloudinary/url-gen'
 	import { setLocalStorageValue } from '../../../utils/localStorage'
 	import { LOCAL_STORAGE_KEYS } from '../../../types/LocalStorage'
 	import { goto } from '$app/navigation'
 	import { DestroyCloudinary } from '../../../services/delete'
-	import { DownloadImageCloudinary } from '../../../services/download'
 	import Link from '$lib/Link.svelte'
+	import TextGradient from '$lib/TextGradient.svelte'
+
+	let isLoading = false
 
 	async function onRemoveFileInput() {
+		isLoading = true
 		const response = await DestroyCloudinary({ publicId: $imageToEdit.publicId })
 		if (response.result) {
-			imageToEdit.set({
-				alt: '',
-				assetId: '',
-				publicId: '',
-				url: '',
-				versionId: ''
-			})
 			setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
+			isLoading = false
 			goto('/')
 		}
 	}
 
-	let _processingImage = true
+	let processingImage = true
 	let tries = 0
 	let url = $imageToEdit.url
 	$: {
@@ -41,12 +37,12 @@
 			const img = new Image()
 			img.src = $imageToEdit?.url
 			img.onload = () => {
-				_processingImage = false
+				processingImage = false
 			}
 			img.onerror = () => {
 				tries++
 				if (tries > 10) {
-					_processingImage = false
+					processingImage = false
 				}
 			}
 		}
@@ -55,13 +51,9 @@
 				(value) => value && value.length > 0
 			)
 			let splitedBaseUrl: string[] = $imageToEdit?.url.split('/')
-
 			url = [splitedBaseUrl.slice(0, 6), transformApply, splitedBaseUrl.slice(6)].flat(1).join('/')
+			// processingImage = false
 		}
-	}
-	const handlerDownload = async () => {
-		const { assetId, versionId } = $imageToEdit
-		const response = await DownloadImageCloudinary({ assetId, versionId })
 	}
 </script>
 
@@ -70,14 +62,16 @@
 		<div class="flex items-center gap-4">
 			<Card>
 				<h2>
-					{$imageToEdit.alt}
+					<TextGradient>
+						{$imageToEdit.alt}
+					</TextGradient>
 				</h2>
 			</Card>
-			<Button on:click={onRemoveFileInput}>Remove</Button>
+			<Button {isLoading} varint="error" on:click={onRemoveFileInput}>Remove Image</Button>
 		</div>
 		<ImagePreview alt={$imageToEdit.alt} src={url} />
 		<div>
-			<Link href={url} Props={{ target: '_blank' }}>Download</Link>
+			<Link href={url} Props={{ target: '_blank' }}>View Image</Link>
 		</div>
 		<Transformations transformations={$transformationsStore} />
 		<Grid>

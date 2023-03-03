@@ -8,28 +8,49 @@
 	--custom-dark-2: 35 35 35;
 	--custom-white: 255 255 255;
 	--custom-pink: 255 0 128;
-	--primary: 52 72 197;
-	--secondary: 30 41 59;
+	--primary: 168 85 247;
+	/* --primary: 52 72 197; */
+	/* 168 85 247 */
+	--secondary: 255 0 128;
+	--gradient: linear-gradient(
+		to bottom,
+		transparent,
+		rgb(var(--primary)),
+		rgb(var(--secondary)),
+		transparent
+	);
+	--gradient-left: linear-gradient(
+		to left,
+		transparent,
+		rgb(var(--primary)),
+		rgb(var(--secondary)),
+		transparent
+	);
 }
 
 ::-webkit-scrollbar {
-	width: 5px;
-	/* background-color: rgb(var(--custom-dark)); */
-	border-radius: 10px;
+	width: 0.4rem;
+}
+::-webkit-scrollbar:horizontal {
+	height: 0.4rem;
+}
+::-webkit-scrollbar-thumb:horizontal {
+	background-image: var(--gradient-left);
+	border-radius: 1px 10px;
 }
 ::-webkit-scrollbar-thumb {
-	background-color: rgb(var(--primary));
-	border-radius: 10px 0 0 10px;
+	background-image: var(--gradient);
+	border-radius: 1px 10px;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
 }
 
-input[type="number"] {
-  -moz-appearance: textfield;
+input[type='number'] {
+	-moz-appearance: textfield;
 }
-input[type=checkbox]{
+input[type='checkbox'] {
 	appearance: none;
-  }
+}
