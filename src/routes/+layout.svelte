@@ -6,35 +6,35 @@
 	import { imageToEdit } from '../store/image'
 	import { setLocalStorageValue } from '../utils/localStorage'
 	import { LOCAL_STORAGE_KEYS } from '../types/LocalStorage'
+	import { goto } from '$app/navigation'
 	onMount(() => {
 		window.addEventListener('beforeunload', function (e) {
 			const confirmationMessage = 'o/'
 			e.returnValue = confirmationMessage
 			return confirmationMessage
 		})
-
 		window.onunload = function () {
 			if (!navigator.sendBeacon) return
 
 			if ($imageToEdit?.publicId.length > 0) {
 				const url = `/api/${$imageToEdit.publicId}`
-				imageToEdit.set({
-					alt: '',
-					assetId: '',
-					publicId: '',
-					url: '',
-					versionId: ''
-				})
 				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
 				navigator.sendBeacon(url, JSON.stringify({ publicId: $imageToEdit?.publicId }))
+				goto('/')
 			}
 		}
 	})
 </script>
 
+<svelte:head>
+	<title>
+		Home
+	</title>
+</svelte:head>
+
 <Herader />
 
-<main class="my-6 max-w-7xl mx-auto min-h-[83vh] px-3">
+<main class="my-6 max-w-7xl mx-auto min-h-[80vh] px-3">
 	<slot />
 </main>
 

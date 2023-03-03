@@ -26,11 +26,11 @@
 
 <label>
 	{#if isDarkmode}
-		<span class="text-primary border-[2px] dark:border-primary inline-block py-2 px-3 rounded-md hover:bg-primary hover:text-white shadow-lg hover:shadow-primary/20 cursor-pointer duration-300 shadow-black/20">
+		<span class="text-primary border-[2px] border-primary inline-block py-2 px-3 rounded-md hover:bg-primary hover:text-white shadow-lg hover:shadow-primary/20 cursor-pointer duration-300 shadow-black/20">
 			<Moon />
 		</span>
 	{:else}
-		<span class="text-primary border-[2px] dark:border-primary inline-block py-2 px-3 rounded-md hover:bg-primary hover:text-white shadow-lg hover:shadow-primary/20 cursor-pointer duration-300 shadow-black/20">
+		<span class="text-primary border-[2px] border-primary inline-block py-2 px-3 rounded-md hover:bg-primary hover:text-white shadow-lg hover:shadow-primary/20 cursor-pointer duration-300 shadow-black/20">
 			<Sun />
 		</span>
 	{/if}

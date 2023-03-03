@@ -18,7 +18,7 @@ export async function POST(event: RequestEvent) {
 		const { publicId } = await event.request.json()
         if (publicId) {
             await DeleteImage(publicId)
-        }
+		}
 		return json({
             result: 'ok'
         })

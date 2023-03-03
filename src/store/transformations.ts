@@ -6,8 +6,9 @@ export const transformationsStore = writable(initialStateTransformatiosns)
 
 export function setTransformation (key: string, transformation: string) {
     const transformations = get(transformationsStore)
-    transformationsStore.set({
+    const newTransformations = {
         ...transformations,
         [key]: transformation
-    })
+    }
+    transformationsStore.set(newTransformations)
 }

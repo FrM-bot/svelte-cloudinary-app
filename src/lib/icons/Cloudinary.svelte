@@ -1,8 +1,17 @@
+<script lang="ts">
+	// import type { HTMLS } from "svelte/elements"
+
+
+	// import type { HTML } from 'svelte/elements'
+	export let width = 132 as number | string 
+</script>
+
 <svg
 	xmlns="http://www.w3.org/2000/svg"
 	viewBox="0 0 500 96.77"
-	class='w-32 text-[#3448c5]'
-	fill='currentColor'
+	class="text-primary"
+	fill="#3448c5"
+	{width}
 	><title>Cloudinary</title>
 	><g id="Layer_2" data-name="Layer 2"
 		><g id="Layer_1-2" data-name="Layer 1"

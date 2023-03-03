@@ -9,6 +9,9 @@
 			[...event.dataTransfer.items].forEach((item) => {
 				if (item.kind === 'file') {
 					const file = item.getAsFile()
+					if (file?.type.split('/').at(0) !== 'image') {
+						return alert('Only images are allowed')
+					}
 					dispatch('drop', {
 						file
 					})
@@ -16,18 +19,19 @@
 			})
 		}
 		event.currentTarget.classList.add('hidden')
-
 	}
 
-	const onDragOver = (event: DragEvent & { currentTarget: EventTarget & HTMLDivElement }) => event.preventDefault()
+	const onDragOver = (event: DragEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
+		event.preventDefault()
+	}
 	const onDragLeave = (event: DragEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
-		if (event?.currentTarget) {
+		if (!event?.currentTarget?.classList?.contains('hidden')) {
 			event?.currentTarget.classList.add('hidden')
 		}
 	}
 	onMount(() => {
-		const appRoot = document.querySelector('#app')
 		let targetDrag: Element | null = null
+		const appRoot = document.querySelector('body')
 
 		appRoot?.addEventListener('dragover', (event) => {
 			event.preventDefault()
@@ -42,11 +46,13 @@
 </script>
 
 <div
-	class="hidden fixed inset-0 w-full h-screen bg-black/30 backdrop-blur-sm z-10"
+	class="hidden fixed inset-0 w-full h-screen bg-white/40 dark:bg-black/40 backdrop-blur-sm z-20"
 	id="dropzone"
 	on:drop={onDrop}
-	on:dragover|once={onDragOver}
+	on:dragover={onDragOver}
 	on:dragleave={onDragLeave}
 >
-	<p>Drag one or more files to this <i>drop zone</i>.</p>
+	<div class="w-full h-full grid place-content-center z-0">
+		<p>Drop image anywhere</p>
+	</div>
 </div>

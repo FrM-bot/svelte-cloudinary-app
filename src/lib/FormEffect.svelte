@@ -72,7 +72,7 @@
 		{:else}
 			<Input Props={{ type: 'number', name: 'value' }} />
 			{#if optionEffetSelected === 'colorize'}
-				<Input Props={{ type: 'color', name: 'color' }} />
+				<Input Props={{ type: 'color', name: 'color' }} labeltext='Select Color' />
 			{/if}
 		{/if}
 

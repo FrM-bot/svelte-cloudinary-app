@@ -30,12 +30,15 @@
 	import type { Image } from '../store/image'
 	import { DestroyCloudinary } from '../services/delete'
 	import Link from '$lib/Link.svelte'
+	import TextGradient from '$lib/TextGradient.svelte'
 	let File: File | null
 	$: imagePreview = {
 		alt: File && File.name,
 		url: File && URL.createObjectURL(File),
 		publicId: ''
 	} as Image
+	let isLoading = false
+	let isLoadingError = false
 
 	let recientImage: Image
 
@@ -61,27 +64,23 @@
 		}
 	) => {
 		if (File) {
+			isLoading = true
 			const response = await UploadCloudinary(File)
 			if (response?.public_id) {
-				const {
-					public_id: publicId,
-					original_filename: alt,
-					url,
-					version_id,
-					asset_id,
-				} = response
+				const { public_id: publicId, original_filename: alt, url, version_id, asset_id } = response
 
 				const imageCloudinary = {
 					publicId,
 					alt,
 					url,
 					assetId: asset_id,
-					versionId: version_id,
+					versionId: version_id
 				}
 
 				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, imageCloudinary)
 				imageToEdit.set(imageCloudinary)
 				goto(`/${publicId}`)
+				isLoading = false
 			}
 		}
 	}
@@ -97,10 +96,11 @@
 		}
 	})
 	async function onRemoveFileInput() {
+		isLoadingError = true
 		File = null
-		if (recientImage.publicId) {
+		if (recientImage?.publicId) {
 			const response = await DestroyCloudinary({ publicId: $imageToEdit.publicId })
-			if (response.result) {
+			if (response?.result) {
 				imageToEdit.set({
 					alt: '',
 					assetId: '',
@@ -111,38 +111,51 @@
 				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
 			}
 		}
+		isLoadingError = false
 	}
 </script>
 
 <Dragzone on:drop={inputFile} />
 
-<div class="h-full">
-	<form class="flex justify-center items-center gap-4 w-full" on:submit={(e) => onSubmit(e)}>
-		<label
-			class="bg-gradient-to-r to-primary from-secondary p-[3px] w-fit h-fit rounded-lg grid place-content-center border-[2px] dark:border-custom-dark-2 shadow-lg shadow-black/20 hover:shadow-primary/10 duration-300"
-			for="file_input"
-		>
-			<span
-				class="bg-white z-0 dark:border-t-slate-800 dark:bg-custom-dark-2 cursor-pointer text-3xl font-semibold px-3 py-1 rounded-md border-t duration-300"
-			>
-				UPLOAD FILE
-			</span>
-		</label>
-		<input id="file_input" type="file" on:change={onInput} accept="image/*" class="hidden" />
+<div class="flex flex-col items-center gap-4 my-6">
+	<div class="h-full">
+		<form class="flex justify-center items-center gap-4 w-full" on:submit={(e) => onSubmit(e)}>
+			<div class="flex gap-2 flex-col">
+				<label
+					class="bg-gradient-to-r to-primary from-secondary p-[3px] w-fit h-fit rounded-lg grid place-content-center border-[2px] dark:border-custom-dark-2 shadow-lg shadow-primary/20 hover:shadow-primary/10 duration-300"
+					for="file_input"
+				>
+					<span
+						class="bg-white z-0 dark:border-t-slate-800 dark:bg-custom-dark cursor-pointer text-3xl font-semibold px-3 py-1 rounded-md border-t duration-300"
+					>
+						Upload File
+					</span>
+				</label>
+				<span
+					class="dark:bg-custom-dark bg-white p-2 w-fit rounded-md border shadow-primary/20 border-primary shadow-lg"
+				>
+					Or drop a file
+				</span>
+				<input id="file_input" type="file" on:change={onInput} accept="image/*" class="hidden" />
+				{#if File}
+					<div>
+						<Button {isLoading}>Edit</Button>
+					</div>
+				{/if}
+			</div>
+		</form>
+	</div>
 
-		<Button>Save</Button>
-	</form>
-</div>
-
-<div class="flex flex-col items-center gap-4 my-4">
 	{#if imagePreview?.url && imagePreview?.alt}
 		<div class="flex gap-4 items-center">
 			<Card>
-				<h2>
-					{imagePreview.alt}
+				<h2 class="truncate w-fit">
+					<TextGradient>
+						{imagePreview.alt}
+					</TextGradient>
 				</h2>
 			</Card>
-			<Button on:click={onRemoveFileInput}>Remove</Button>
+			<Button isLoading={isLoadingError} varint="error" on:click={onRemoveFileInput}>Remove Image</Button>
 		</div>
 		<ImagePreview alt={imagePreview.alt} src={imagePreview.url} />
 		{#if recientImage?.publicId}
@@ -150,3 +163,4 @@
 		{/if}
 	{/if}
 </div>
+

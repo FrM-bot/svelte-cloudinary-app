@@ -20,7 +20,7 @@
 </script>
 
 <select
-	class="dark:bg-custom-dark dark:text-white px-3 py-2 border-[2px] border-primary rounded w-full"
+	class="dark:bg-custom-dark px-3 py-2 border border-primary rounded-sm w-full"
 	{...Props}
 	on:change={handlerChange}
 >
