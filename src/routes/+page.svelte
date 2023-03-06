@@ -43,7 +43,19 @@
 	let isLoading = false
 	let isLoadingError = false
 
-	// let recientImage: Image
+	async function onRemoveFileToCloudinary({ publicId }: { publicId: string }) {
+		const response = await DestroyCloudinary({ publicId })
+		if (response?.result) {
+			imageToEdit.set({
+				alt: '',
+				assetId: '',
+				publicId: '',
+				url: '',
+				versionId: ''
+			})
+			setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
+		}
+	}
 
 	const onInput = (
 		event: Event & {
@@ -68,6 +80,9 @@
 	) => {
 		if (File) {
 			isLoading = true
+			if ($imageToEdit?.publicId) {
+				await onRemoveFileToCloudinary({ publicId: $imageToEdit?.publicId })
+			}
 			const response = await UploadCloudinary(File)
 			if (response?.public_id) {
 				const { public_id: publicId, original_filename: alt, url, version_id, asset_id } = response
@@ -97,17 +112,7 @@
 		isLoadingError = true
 		File = null
 		if ($imageToEdit?.publicId) {
-			const response = await DestroyCloudinary({ publicId: $imageToEdit.publicId })
-			if (response?.result) {
-				imageToEdit.set({
-					alt: '',
-					assetId: '',
-					publicId: '',
-					url: '',
-					versionId: ''
-				})
-				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
-			}
+			await onRemoveFileToCloudinary({ publicId: $imageToEdit.publicId })
 		}
 		isLoadingError = false
 	}
@@ -119,7 +124,7 @@
 
 <Dragzone on:drop={inputFile} />
 
-<div class="grid gap-6 w-full h-full">
+<section class="grid gap-6 w-full h-full">
 	<form class="flex flex-col gap-4 items-center w-full" on:submit={(e) => onSubmit(e)}>
 		<div class="max-w-xl w-full">
 			<div class="flex items-center justify-center w-full">
@@ -146,20 +151,16 @@
 			</div>
 		</div>
 		{#if (imagePreview?.url && imagePreview?.alt) || ($imageToEdit.url && $imageToEdit?.alt)}
-			<div
-				class="flex gap-4 items-center"
-			>
+			<div class="flex gap-4 items-center">
 				<Card>
-						<TextGradient tag='h2'>
-							{imagePreview.alt ?? $imageToEdit.alt}
-						</TextGradient>
+					<TextGradient tag="h2">
+						{imagePreview.alt ?? $imageToEdit.alt}
+					</TextGradient>
 				</Card>
 				<div class="mx-auto">
-					<Button isLoading={isLoadingError} varint="error" on:click={onRemoveFileInput}
-						>
+					<Button isLoading={isLoadingError} varint="error" on:click={onRemoveFileInput}>
 						<Cross />
-					</Button
-					>
+					</Button>
 				</div>
 			</div>
 			<ImagePreview
@@ -182,4 +183,4 @@
 			<Button varint="success" {isLoading}>Edit</Button>
 		{/if}
 	</form>
-</div>
+</section>
