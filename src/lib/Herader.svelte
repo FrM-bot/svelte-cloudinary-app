@@ -38,11 +38,7 @@
 				/>
 			</svg>
 			<span class="font-bold ml-1">
-				Cloud
-			</span>
-
-			<span class="font-extrabold">
-				Image
+				CloudImage
 			</span>
 		</Link>
 

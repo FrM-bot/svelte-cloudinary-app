@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte'
 	import { createEventDispatcher } from 'svelte'
 	import Card from './Card.svelte'
+	import ImageIcon from './icons/ImageIcon.svelte'
+	import TextGradient from './TextGradient.svelte'
 	const dispatch = createEventDispatcher()
 
 	const onDrop = (event: DragEvent & { currentTarget: EventTarget & HTMLDivElement }) => {
@@ -54,17 +56,8 @@
 	on:dragleave={onDragLeave}
 >
 	<div class="w-full h-full grid place-content-center z-0">
-		<div class="flex items-center flex-col text-custom-dark bg-white/80 dark:bg-custom-dark/80 dark:text-white rounded-md shadow-lg p-4">
-			<p>Drop image anywhere</p>
-			<svg class="w-40 h-40" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg"
-				><g fill="none" fill-rule="evenodd" transform="translate(3 3)"
-					><g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-						><path
-							d="m2.5.5h10c1.1045695 0 2 .8954305 2 2v10c0 1.1045695-.8954305 2-2 2h-10c-1.1045695 0-2-.8954305-2-2v-10c0-1.1045695.8954305-2 2-2z"
-						/><path d="m14.5 10.5-3-3-3 2.985" /><path d="m12.5 14.5-9-9-3 3" /></g
-					><circle cx="11" cy="4" fill="currentColor" r="1" /></g
-				></svg
-			>
+		<div class="flex items-center border dark:border-custom-dark-2 flex-col text-custom-dark bg-white/80 dark:bg-custom-dark/80 dark:text-white rounded-md shadow-lg p-4">
+			<TextGradient>Drop image anywhere</TextGradient>
 		</div>
 	</div>
 	<!-- <slot /> -->
