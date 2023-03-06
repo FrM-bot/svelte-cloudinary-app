@@ -89,7 +89,7 @@
 		<ImagePreview alt={$imageToEdit.alt} src={url} />
 		<div class="flex justify-center flex-wrap gap-4 w-full">
 			{#if urlDownload}
-				<Link href={urlDownload} Props={{ download: $imageToEdit.alt }}>Confirm Dwonload</Link>
+				<Link href={urlDownload} Props={{ download: $imageToEdit.alt }}>Confirm Download</Link>
 			{:else}
 				<Button varint="success" on:click={() => onDownload(url)}>Download</Button>
 			{/if}
