@@ -19,6 +19,7 @@
 	import Cross from '$lib/icons/Cross.svelte'
 
 	let isLoading = false
+	let urlDownload: string
 
 	async function onRemoveFileInput() {
 		isLoading = true
@@ -37,20 +38,26 @@
 		}
 	}
 
-	let processingImage = true
+	let _processingImage = true
 	let tries = 0
 	let url = $imageToEdit.url
+	const onDownload = async (urlImageToDownload: string) => {
+		const music = await fetch(urlImageToDownload)
+		const musicBlob = await music.blob()
+		const urlImage = URL.createObjectURL(musicBlob)
+		urlDownload = urlImage
+	}
 	$: {
 		if (globalThis.window) {
 			const img = new Image()
 			img.src = $imageToEdit?.url
 			img.onload = () => {
-				processingImage = false
+				_processingImage = false
 			}
 			img.onerror = () => {
 				tries++
 				if (tries > 10) {
-					processingImage = false
+					_processingImage = false
 				}
 			}
 		}
@@ -60,7 +67,7 @@
 			)
 			let splitedBaseUrl: string[] = $imageToEdit?.url.split('/')
 			url = [splitedBaseUrl.slice(0, 6), transformApply, splitedBaseUrl.slice(6)].flat(1).join('/')
-			// processingImage = false
+			urlDownload = ''
 		}
 	}
 </script>
@@ -70,7 +77,7 @@
 </svelte:head>
 
 <div class="flex flex-col items-center gap-4 my-4">
-	{#if $imageToEdit?.url && $imageToEdit?.alt}
+	{#if $imageToEdit?.url && $imageToEdit?.alt && !_processingImage}
 		<div class="flex items-center gap-4">
 			<Card>
 				<TextGradient tag="span">
@@ -80,11 +87,15 @@
 			<Button {isLoading} varint="error" on:click={onRemoveFileInput}><Cross /></Button>
 		</div>
 		<ImagePreview alt={$imageToEdit.alt} src={url} />
-		<div>
-			<Link href={url} Props={{ target: '_blank' }}>View Image</Link>
+		<div class="flex justify-center flex-wrap gap-4 w-full">
+			{#if urlDownload}
+				<Link href={urlDownload} Props={{ download: $imageToEdit.alt }}>Confirm Dwonload</Link>
+			{:else}
+				<Button varint="success" on:click={() => onDownload(url)}>Download</Button>
+			{/if}
 		</div>
 		<Transformations transformations={$transformationsStore} />
-		<Card addClass='w-full'>
+		<Card addClass="w-full">
 			<Grid>
 				<FormResize />
 				<FormEffect />

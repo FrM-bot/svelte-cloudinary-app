@@ -32,6 +32,8 @@
 	import Link from '$lib/Link.svelte'
 	import TextGradient from '$lib/TextGradient.svelte'
 	import Cross from '$lib/icons/Cross.svelte'
+	import CloudUpload from '$lib/icons/CloudUpload.svelte'
+	import ImageIcon from '$lib/icons/ImageIcon.svelte'
 	let File: File | null
 	$: imagePreview = {
 		alt: File && File.name,
@@ -90,12 +92,7 @@
 		const fileInput = event.detail.file
 		File = fileInput
 	}
-	// onMount(() => {
-	// 	recientImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE)
-	// 	if (recientImage) {
-	// 		imagePreview = recientImage
-	// 	}
-	// })
+
 	async function onRemoveFileInput() {
 		isLoadingError = true
 		File = null
@@ -122,27 +119,16 @@
 
 <Dragzone on:drop={inputFile} />
 
-<div class="flex flex-col justify-center items-center gap-6 w-full h-full">
+<div class="grid gap-6 w-full h-full">
 	<form class="flex flex-col gap-4 items-center w-full" on:submit={(e) => onSubmit(e)}>
 		<div class="max-w-xl w-full">
 			<div class="flex items-center justify-center w-full">
 				{#if !File && !$imageToEdit?.publicId}
 					<Card variant="gradient" tag="label" addClass="w-full">
 						<div class="flex flex-col items-center justify-center pt-5 pb-6">
-							<svg
-								aria-hidden="true"
-								class="w-10 h-10 mb-3 text-gray-400"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								xmlns="http://www.w3.org/2000/svg"
-								><path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-								/></svg
-							>
+							<span class="animate-pulse">
+								<CloudUpload />
+							</span>
 							<p class="mb-2 text-sm dark:text-gray-400">
 								<span class="font-semibold">Click to upload</span> or drag and drop
 							</p>
@@ -170,7 +156,9 @@
 				</Card>
 				<div class="mx-auto">
 					<Button isLoading={isLoadingError} varint="error" on:click={onRemoveFileInput}
-						><Cross /></Button
+						>
+						<Cross />
+					</Button
 					>
 				</div>
 			</div>
@@ -183,18 +171,9 @@
 			{/if}
 		{:else}
 			<Card variant="gradient" addClass="max-w-5xl w-full gird place-content-center animate-pulse">
-				<div role="status" class="rounded inline-block w-full md:h-[50vh] h-64 animate-pulse my-3">
+				<div role="status" class="rounded inline-block w-full md:h-[50vh] h-64 my-3">
 					<div class="flex items-center bg-white justify-center h-full rounded dark:bg-custom-dark">
-						<svg
-							class="w-12 h-12 text-gray-200 dark:text-gray-600"
-							xmlns="http://www.w3.org/2000/svg"
-							aria-hidden="true"
-							fill="currentColor"
-							viewBox="0 0 640 512"
-							><path
-								d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z"
-							/></svg
-						>
+						<ImageIcon />
 					</div>
 				</div>
 			</Card>

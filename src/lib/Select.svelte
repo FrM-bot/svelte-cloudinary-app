@@ -1,7 +1,5 @@
 <script lang="ts">
 	import type { HTMLSelectAttributes } from 'svelte/elements'
-	import { FormatString } from '../utils/FromatingString'
-
 	import { createEventDispatcher } from 'svelte'
 
 	const dispatch = createEventDispatcher()
