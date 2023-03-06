@@ -70,7 +70,7 @@
 				{/each}
 			</Select>
 		{:else}
-			<Input Props={{ type: 'number', name: 'value' }} />
+			<Input Props={{ type: 'number', name: 'value', placeholder: '0' }} />
 			{#if optionEffetSelected === 'colorize'}
 				<Input Props={{ type: 'color', name: 'color' }} labeltext='Select Color' />
 			{/if}

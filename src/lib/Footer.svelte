@@ -5,14 +5,14 @@
 	import Link from './Link.svelte'
 </script>
 
-<footer class="dark:bg-custom-dark shadow-lg py-4 px-6">
+<footer class="dark:bg-custom-dark shadow-lg py-4 px-6 border-t dark:border-t-custom-dark-2 mx-2">
 	<div class="flex">
 		<p class="flex items-center">Built and Design by</p>
 		<Link href="https://frm-bot.xyz" Props={{ target: '_blank', title: 'Maciel Franco' }}>Maciel Franco</Link>
 	</div>
-	<div class="w-full grid place-content-center">
-		<div class="flex items-center flex-col gap-2">
-			<p class="text-secondary">Made with</p>
+	<div class="w-full grid place-content-center my-2">
+		<div class="flex items-center flex-col gap-2 border-t dark:border-t-custom-dark-2">
+			<p>Made with</p>
 			<div class="flex items-center gap-2">
 				<Svelte />
 				<Cross />

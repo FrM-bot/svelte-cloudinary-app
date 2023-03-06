@@ -42,8 +42,8 @@
 				<option value={option}>{FormatString(option)}</option>
 			{/each}
 		</Select>
-		<Input Props={{ name: 'width', type: 'number' }} labeltext="Width" />
-		<Input Props={{ name: 'height', type: 'number' }} labeltext="Height" />
+		<Input Props={{ name: 'width', type: 'number', placeholder: '0' }} labeltext="Width" />
+		<Input Props={{ name: 'height', type: 'number', placeholder: '0' }} labeltext="Height" />
 		<Button>Apply</Button>
 	</Fieldset>
 </form>

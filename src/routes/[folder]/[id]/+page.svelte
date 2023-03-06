@@ -16,6 +16,7 @@
 	import { DestroyCloudinary } from '../../../services/delete'
 	import Link from '$lib/Link.svelte'
 	import TextGradient from '$lib/TextGradient.svelte'
+	import Cross from '$lib/icons/Cross.svelte'
 
 	let isLoading = false
 
@@ -23,6 +24,13 @@
 		isLoading = true
 		const response = await DestroyCloudinary({ publicId: $imageToEdit.publicId })
 		if (response.result) {
+			imageToEdit.set({
+				alt: '',
+				assetId: '',
+				publicId: '',
+				url: '',
+				versionId: ''
+			})
 			setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
 			isLoading = false
 			goto('/')
@@ -57,28 +65,32 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{$imageToEdit.alt}</title>
+</svelte:head>
+
 <div class="flex flex-col items-center gap-4 my-4">
 	{#if $imageToEdit?.url && $imageToEdit?.alt}
 		<div class="flex items-center gap-4">
 			<Card>
-				<h2>
-					<TextGradient>
-						{$imageToEdit.alt}
-					</TextGradient>
-				</h2>
+				<TextGradient tag="span">
+					{$imageToEdit.alt}
+				</TextGradient>
 			</Card>
-			<Button {isLoading} varint="error" on:click={onRemoveFileInput}>Remove Image</Button>
+			<Button {isLoading} varint="error" on:click={onRemoveFileInput}><Cross /></Button>
 		</div>
 		<ImagePreview alt={$imageToEdit.alt} src={url} />
 		<div>
 			<Link href={url} Props={{ target: '_blank' }}>View Image</Link>
 		</div>
 		<Transformations transformations={$transformationsStore} />
-		<Grid>
-			<FormResize />
-			<FormEffect />
-			<FormAjust />
-			<FormDelivery />
-		</Grid>
+		<Card addClass='w-full'>
+			<Grid>
+				<FormResize />
+				<FormEffect />
+				<FormAjust />
+				<FormDelivery />
+			</Grid>
+		</Card>
 	{/if}
 </div>

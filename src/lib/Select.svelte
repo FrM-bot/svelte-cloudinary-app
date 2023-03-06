@@ -20,11 +20,12 @@
 </script>
 
 <select
-	class="dark:bg-custom-dark px-3 py-2 border border-primary rounded-sm w-full"
+	class="dark:bg-custom-dark px-3 py-2 border dark:border-custom-dark-2 rounded-sm w-full"
 	{...Props}
 	on:change={handlerChange}
+	value=''
 >
-	<option value="" selected>Select option</option>
+<option selected disabled value="">Select option</option>
 
 	<slot />
 </select>

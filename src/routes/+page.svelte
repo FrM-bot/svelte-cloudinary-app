@@ -31,16 +31,17 @@
 	import { DestroyCloudinary } from '../services/delete'
 	import Link from '$lib/Link.svelte'
 	import TextGradient from '$lib/TextGradient.svelte'
+	import Cross from '$lib/icons/Cross.svelte'
 	let File: File | null
 	$: imagePreview = {
 		alt: File && File.name,
 		url: File && URL.createObjectURL(File),
-		publicId: ''
+		publicId: $imageToEdit.publicId ? $imageToEdit?.publicId : ''
 	} as Image
 	let isLoading = false
 	let isLoadingError = false
 
-	let recientImage: Image
+	// let recientImage: Image
 
 	const onInput = (
 		event: Event & {
@@ -49,9 +50,9 @@
 	) => {
 		if (event.currentTarget.files) {
 			const fileInput = event?.currentTarget.files[0]
-			const fileSize = fileInput.size / 1024 / 1024
-			if (fileSize > 7) {
-				return alert('Image too big')
+			const fileSize = fileInput?.size / 1024 / 1024
+			if (fileSize > 5) {
+				return alert('Very big image')
 			}
 			File = fileInput
 		}
@@ -89,16 +90,16 @@
 		const fileInput = event.detail.file
 		File = fileInput
 	}
-	onMount(() => {
-		recientImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE)
-		if (recientImage) {
-			imagePreview = recientImage
-		}
-	})
+	// onMount(() => {
+	// 	recientImage = getLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE)
+	// 	if (recientImage) {
+	// 		imagePreview = recientImage
+	// 	}
+	// })
 	async function onRemoveFileInput() {
 		isLoadingError = true
 		File = null
-		if (recientImage?.publicId) {
+		if ($imageToEdit?.publicId) {
 			const response = await DestroyCloudinary({ publicId: $imageToEdit.publicId })
 			if (response?.result) {
 				imageToEdit.set({
@@ -115,52 +116,91 @@
 	}
 </script>
 
+<svelte:head>
+	<title>CloudImage</title>
+</svelte:head>
+
 <Dragzone on:drop={inputFile} />
 
-<div class="flex flex-col items-center gap-4 my-6">
-	<div class="h-full">
-		<form class="flex justify-center items-center gap-4 w-full" on:submit={(e) => onSubmit(e)}>
-			<div class="flex gap-2 flex-col">
-				<label
-					class="bg-gradient-to-r to-primary from-secondary p-[3px] w-fit h-fit rounded-lg grid place-content-center border-[2px] dark:border-custom-dark-2 shadow-lg shadow-primary/20 hover:shadow-primary/10 duration-300"
-					for="file_input"
-				>
-					<span
-						class="bg-white z-0 dark:border-t-slate-800 dark:bg-custom-dark cursor-pointer text-3xl font-semibold px-3 py-1 rounded-md border-t duration-300"
-					>
-						Upload File
-					</span>
-				</label>
-				<span
-					class="dark:bg-custom-dark bg-white p-2 w-fit rounded-md border shadow-primary/20 border-primary shadow-lg"
-				>
-					Or drop a file
-				</span>
-				<input id="file_input" type="file" on:change={onInput} accept="image/*" class="hidden" />
-				{#if File}
-					<div>
-						<Button {isLoading}>Edit</Button>
-					</div>
+<div class="flex flex-col justify-center items-center gap-6 w-full h-full">
+	<form class="flex flex-col gap-4 items-center w-full" on:submit={(e) => onSubmit(e)}>
+		<div class="max-w-xl w-full">
+			<div class="flex items-center justify-center w-full">
+				{#if !File && !$imageToEdit?.publicId}
+					<Card variant="gradient" tag="label" addClass="w-full">
+						<div class="flex flex-col items-center justify-center pt-5 pb-6">
+							<svg
+								aria-hidden="true"
+								class="w-10 h-10 mb-3 text-gray-400"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								><path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+								/></svg
+							>
+							<p class="mb-2 text-sm dark:text-gray-400">
+								<span class="font-semibold">Click to upload</span> or drag and drop
+							</p>
+							<p class="text-xs dark:text-gray-400">SVG, PNG, JPG, WEBP, JPEG or GIF (MAX. 5MB)</p>
+						</div>
+						<input
+							on:change={onInput}
+							id="file_input"
+							accept="image/*"
+							type="file"
+							class="hidden"
+						/>
+					</Card>
 				{/if}
 			</div>
-		</form>
-	</div>
-
-	{#if imagePreview?.url && imagePreview?.alt}
-		<div class="flex gap-4 items-center">
-			<Card>
-				<h2 class="truncate w-fit">
-					<TextGradient>
-						{imagePreview.alt}
-					</TextGradient>
-				</h2>
-			</Card>
-			<Button isLoading={isLoadingError} varint="error" on:click={onRemoveFileInput}>Remove Image</Button>
 		</div>
-		<ImagePreview alt={imagePreview.alt} src={imagePreview.url} />
-		{#if recientImage?.publicId}
-			<Link href={recientImage.publicId}>Resume</Link>
+		{#if (imagePreview?.url && imagePreview?.alt) || ($imageToEdit.url && $imageToEdit?.alt)}
+			<div
+				class="flex gap-4 items-center"
+			>
+				<Card>
+						<TextGradient tag='h2'>
+							{imagePreview.alt ?? $imageToEdit.alt}
+						</TextGradient>
+				</Card>
+				<div class="mx-auto">
+					<Button isLoading={isLoadingError} varint="error" on:click={onRemoveFileInput}
+						><Cross /></Button
+					>
+				</div>
+			</div>
+			<ImagePreview
+				alt={imagePreview.alt ?? $imageToEdit?.alt}
+				src={imagePreview.url ?? $imageToEdit.url}
+			/>
+			{#if $imageToEdit?.publicId}
+				<Link href={$imageToEdit?.publicId}>Resume</Link>
+			{/if}
+		{:else}
+			<Card variant="gradient" addClass="max-w-5xl w-full gird place-content-center animate-pulse">
+				<div role="status" class="rounded inline-block w-full md:h-[50vh] h-64 animate-pulse my-3">
+					<div class="flex items-center bg-white justify-center h-full rounded dark:bg-custom-dark">
+						<svg
+							class="w-12 h-12 text-gray-200 dark:text-gray-600"
+							xmlns="http://www.w3.org/2000/svg"
+							aria-hidden="true"
+							fill="currentColor"
+							viewBox="0 0 640 512"
+							><path
+								d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z"
+							/></svg
+						>
+					</div>
+				</div>
+			</Card>
 		{/if}
-	{/if}
+		{#if File}
+			<Button varint="success" {isLoading}>Edit</Button>
+		{/if}
+	</form>
 </div>
-
