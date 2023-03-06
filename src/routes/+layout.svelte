@@ -7,23 +7,23 @@
 	import { setLocalStorageValue } from '../utils/localStorage'
 	import { LOCAL_STORAGE_KEYS } from '../types/LocalStorage'
 	import { goto } from '$app/navigation'
-	// onMount(() => {
-	// 	window.addEventListener('beforeunload', function (e) {
-	// 		const confirmationMessage = 'o/'
-	// 		e.returnValue = confirmationMessage
-	// 		return confirmationMessage
-	// 	})
-	// 	window.onunload = function () {
-	// 		if (!navigator.sendBeacon) return
+	onMount(() => {
+		window.addEventListener('beforeunload', function (e) {
+			const confirmationMessage = 'o/'
+			e.returnValue = confirmationMessage
+			return confirmationMessage
+		})
+		window.onunload = function () {
+			if (!navigator.sendBeacon) return
 
-	// 		if ($imageToEdit?.publicId.length > 0) {
-	// 			const url = `/api/${$imageToEdit.publicId}`
-	// 			setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
-	// 			navigator.sendBeacon(url, JSON.stringify({ publicId: $imageToEdit?.publicId }))
-	// 			goto('/')
-	// 		}
-	// 	}
-	// })
+			if ($imageToEdit?.publicId.length > 0) {
+				const url = `/api/${$imageToEdit.publicId}`
+				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
+				navigator.sendBeacon(url, JSON.stringify({ publicId: $imageToEdit?.publicId }))
+				goto('/')
+			}
+		}
+	})
 </script>
 
 <Herader />
