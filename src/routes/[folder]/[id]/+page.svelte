@@ -76,11 +76,11 @@
 	<title>{$imageToEdit.alt}</title>
 </svelte:head>
 
-<div class="flex flex-col items-center gap-4 my-4">
+<section class="flex flex-col items-center gap-4 my-4">
 	{#if $imageToEdit?.url && $imageToEdit?.alt && !_processingImage}
 		<div class="flex items-center gap-4">
 			<Card>
-				<TextGradient tag="span">
+				<TextGradient tag="h2">
 					{$imageToEdit.alt}
 				</TextGradient>
 			</Card>
@@ -104,4 +104,4 @@
 			</Grid>
 		</Card>
 	{/if}
-</div>
+</section>

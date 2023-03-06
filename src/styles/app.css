@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+	font-family: Roboto Mono;
+	src: url('../assets/RobotoMono-ExtraLight.ttf');
+	font-style: normal;
+	font-weight: normal;
+	src: url('../assets/RobotoMono-Light.ttf');
+	src: url('../assets/RobotoMono-Medium.ttf');
+}
+
+html {
+	font-family: Roboto Mono, sans-serif;
+	/* font-size: var(--font-size-base); */
+}
+
 :root {
 	--custom-cyan: 21 232 207;
 	--custom-dark: 20 20 20;

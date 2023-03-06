@@ -17,8 +17,7 @@
 
 <button
 	on:click
-	class={`${VARIANTS[varint]} grid place-content-center truncate dark:bg-custom-dark [letter-spacing:1px] border px-[.8em] py-[.4em] rounded-md shadow-lg active:translate-y-[2px] active:[letter-spacing:2px] duration-300`}
->
+	class={`${VARIANTS[varint]} grid place-content-center truncate bg-white dark:bg-custom-dark [letter-spacing:1px] border px-[.8em] py-[.4em] rounded-md shadow-lg active:translate-y-[2px] active:[letter-spacing:2px] duration-300`}>
 	{#if isLoading}
 		<span class={`${VARIANTS_LOADER[varint]} loader w-6 h-6 rounded-full border-y-transparent border-[2px] bg-transparent`} />
 	{:else}

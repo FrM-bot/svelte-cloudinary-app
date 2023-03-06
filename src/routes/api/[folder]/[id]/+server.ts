@@ -9,8 +9,10 @@ export async function DELETE(event: RequestEvent) {
 			result: 'ok'
 		})
 	} catch (Error: Error | any) {
-		console.error(error)
-		return error(500, Error)
+		console.error(Error)
+		throw error(500, {
+			message: Error.message
+		})
 	}
 }
 export async function POST(event: RequestEvent) {
@@ -23,7 +25,9 @@ export async function POST(event: RequestEvent) {
 			result: 'ok'
 		})
 	} catch (Error: Error | any) {
-		console.error(error)
-		return error(500, Error)
+		console.error(Error)
+		throw error(500, {
+			message: Error.message
+		})
 	}
 }

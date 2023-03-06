@@ -48,7 +48,7 @@
 			class={`after:absolute after:bg-gradient-to-l after:from-primary after:to-custom-pink after:w-full after:rounded after:h-px after:bottom-0 after:left-0 after:scale-x-100 after:duration-300 after:z-[5] relative duration-300`}
 		>
 			<input
-				class={`dark:bg-custom-dark bg-white font-normal rounded-sm outline-none border border-transparent p-2 focus:border-secondary text-primary font-medium duration-300 shadow-lg focus:shadow-black/20 focus:-translate-y-1 w-full`}
+				class={`dark:bg-custom-dark bg-white font-normal rounded-sm outline-none border border-transparent p-2 focus:border-secondary text-primary duration-300 shadow-lg focus:shadow-black/20 focus:-translate-y-1 w-full`}
 				{...Props}
 			/>
 		</div>
