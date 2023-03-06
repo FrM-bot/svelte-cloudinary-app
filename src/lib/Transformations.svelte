@@ -4,6 +4,7 @@
 	import { FormatString } from '../utils/FromatingString'
 	import Card from './Card.svelte'
 	import Cross from './icons/Cross.svelte'
+	import TextGradient from './TextGradient.svelte'
 	export let transformations = get(transformationsStore)
 
 	const handlerRemove = ({ key }: { key: string }) => {
@@ -20,7 +21,7 @@
 		<Card>
             <div class="flex gap-2 items-center">
 
-                <span class="text-primary">{FormatString(key)}</span>
+                <TextGradient>{FormatString(key)}</TextGradient>
                 <button on:click={() => handlerRemove({ key })} class=" grid place-content-center border rounded-full hover:scale-110 text-custom-pink/70 border-custom-pink/70 hover:border-custom-pink hover:text-custom-pink duration-300">
 				<Cross />
                 </button>

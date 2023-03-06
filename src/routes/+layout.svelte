@@ -26,12 +26,6 @@
 	})
 </script>
 
-<svelte:head>
-	<title>
-		Home
-	</title>
-</svelte:head>
-
 <Herader />
 
 <main class="my-6 max-w-7xl mx-auto min-h-[80vh] px-3">

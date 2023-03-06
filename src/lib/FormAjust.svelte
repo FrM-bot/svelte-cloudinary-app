@@ -27,7 +27,9 @@
 		if (!ajust) {
 			return
 		}
-		const resultImage = cloudinary.image($imageToEdit.publicId).adjust(AjustCloudinary[ajust](value))
+		const resultImage = cloudinary
+			.image($imageToEdit.publicId)
+			.adjust(AjustCloudinary[ajust](value))
 
 		const transformation = resultImage.toURL().split('/')[6]
 		setTransformation(ajust, transformation)
@@ -37,11 +39,12 @@
 <form on:submit={handlerAjust} class="w-full">
 	<Fieldset legend="Ajust">
 		<Select Props={{ name: 'ajust' }}>
+
 			{#each Object.keys(AjustCloudinary) as option}
 				<option value={option}>{FormatString(option)}</option>
 			{/each}
 		</Select>
-		<Input Props={{ name: 'value', type: 'number', placeholder: '40' }} />
+		<Input Props={{ name: 'value', type: 'number', placeholder: '0' }} />
 		<Button>Apply</Button>
 	</Fieldset>
 </form>
