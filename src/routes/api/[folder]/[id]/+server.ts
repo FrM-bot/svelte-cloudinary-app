@@ -1,33 +1,31 @@
 import { json, type RequestEvent, error } from '@sveltejs/kit'
-import { DeleteImage } from '../../../../config/cloudinary'
+import { DeleteImage } from '$lib/config/cloudinary'
 
-export async function DELETE(event: RequestEvent) {
-	try {
-		const { publicId } = await event.request.json()
-		await DeleteImage(publicId)
-		return json({
-			result: 'ok'
-		})
-	} catch (Error: Error | any) {
-		console.error(Error)
-		throw error(500, {
-			message: Error.message
-		})
-	}
-}
-export async function POST(event: RequestEvent) {
+async function deleteImage (event: RequestEvent) {
 	try {
 		const { publicId } = await event.request.json()
 		if (publicId) {
 			await DeleteImage(publicId)
+			return json({
+				result: 'ok'
+			})
 		}
 		return json({
-			result: 'ok'
+			result: 'Empty public id'
 		})
-	} catch (Error: Error | any) {
+	} catch (Error: any | Error) {
 		console.error(Error)
 		throw error(500, {
-			message: Error.message
+			message: Error.message as string
 		})
 	}
+}
+
+const DELETE = deleteImage
+const POST = deleteImage
+
+
+export {
+	POST,
+	DELETE
 }

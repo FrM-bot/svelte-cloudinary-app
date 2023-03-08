@@ -1,7 +1,7 @@
 <script>
 	import { page } from '$app/stores'
-	import Link from '$lib/Link.svelte'
-	import TextGradient from '$lib/TextGradient.svelte'
+	import Link from '$lib/components/Link.svelte'
+	import TextGradient from '$lib/components/TextGradient.svelte'
 </script>
 
 <section class="grid place-content-center gap-6 w-full h-[50vh]">
