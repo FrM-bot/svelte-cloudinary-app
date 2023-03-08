@@ -1,9 +1,11 @@
 <script>
-	import { onMount, onDestroy } from 'svelte'
-	import Footer from '$lib/Footer.svelte'
-	import Herader from '$lib/Herader.svelte'
-	import '../styles/app.css'
-	import { imageToEdit } from '../store/image'
+	import { onMount } from 'svelte'
+	import Footer from '$lib/components/Footer.svelte'
+	import Herader from '$lib/components/Herader.svelte'
+	import '$lib/styles/app.css'
+	import { imageToEdit } from '$lib/store/image'
+	import { setLocalStorageValue } from '$lib/utils/localStorage'
+	import { LOCAL_STORAGE_KEYS } from '$lib/types/LocalStorage'
 	onMount(() => {
 		window.addEventListener('beforeunload', (event) => {
 			event.preventDefault()
@@ -12,9 +14,10 @@
 		window.onunload = () => {
 			if (!window.navigator.sendBeacon) return
 
-			if ($imageToEdit?.publicId.length > 0) {
+			if ($imageToEdit?.publicId) {
 				const url = `/api/${$imageToEdit.publicId}`
 				navigator.sendBeacon(url, JSON.stringify({ publicId: $imageToEdit?.publicId }))
+				setLocalStorageValue(LOCAL_STORAGE_KEYS.IMAGE, null)
 			}
 		}
 	})

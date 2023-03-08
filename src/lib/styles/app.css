@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	font-family: Roboto Mono;
+	src: url('$lib/assets/RobotoMono-ExtraLight.ttf');
+	font-style: normal;
+	font-weight: normal;
+	src: url('$lib/assets/RobotoMono-Light.ttf');
+	src: url('$lib/assets/RobotoMono-Medium.ttf');
+}
+
+html {
+	font-family: Roboto Mono, sans-serif;
+	/* font-size: var(--font-size-base); */
+}
+
+:root {
+	--custom-cyan: 21 232 207;
+	--custom-dark: 20 20 20;
+	--custom-dark-2: 35 35 35;
+	--custom-white: 255 255 255;
+	--custom-pink: 255 0 128;
+	--primary: 168 85 247;
+	/* --primary: 52 72 197; */
+	/* 168 85 247 */
+	--secondary: 255 0 128;
+	--gradient: linear-gradient(
+		to bottom,
+		transparent,
+		rgb(var(--primary)),
+		rgb(var(--secondary)),
+		transparent
+	);
+	--gradient-left: linear-gradient(
+		to left,
+		transparent,
+		rgb(var(--primary)),
+		rgb(var(--secondary)),
+		transparent
+	);
+}
+
+::-webkit-scrollbar {
+	width: 0.4rem;
+}
+::-webkit-scrollbar:horizontal {
+	height: 0.4rem;
+}
+::-webkit-scrollbar-thumb:horizontal {
+	background-image: var(--gradient-left);
+	border-radius: 1px 10px;
+}
+::-webkit-scrollbar-thumb {
+	background-image: var(--gradient);
+	border-radius: 1px 10px;
+	/* color: #ff0080; */
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+}
+
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+input[type='checkbox'] {
+	appearance: none;
+}
