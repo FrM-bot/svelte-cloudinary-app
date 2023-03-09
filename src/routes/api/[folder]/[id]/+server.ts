@@ -21,8 +21,8 @@ async function deleteImage (event: RequestEvent) {
 	}
 }
 
-const DELETE = deleteImage
-const POST = deleteImage
+const DELETE = (event: RequestEvent) => deleteImage(event)
+const POST = (event: RequestEvent) => deleteImage(event)
 
 
 export {
